@@ -71,7 +71,7 @@ jobs:
           # Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # Nur stabile Plattform + Build-Tools
+          # Nur stabile Plattform + Build-Tools installieren
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       # 7️⃣ Alte Builds bereinigen
