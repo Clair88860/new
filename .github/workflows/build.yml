@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1️⃣ Checkout Repo
+      # 1️⃣ Code auschecken
       - uses: actions/checkout@v3
 
       # 2️⃣ Python Setup
@@ -47,9 +47,9 @@ jobs:
       - name: Install Buildozer
         run: |
           pip install --upgrade pip
-          pip install buildozer cython
+          pip install buildozer==1.4.2 cython
 
-      # 6️⃣ Android SDK manuell installieren
+      # 6️⃣ Android SDK + Build-Tools installieren
       - name: Install Android SDK manually
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -59,7 +59,7 @@ jobs:
           cd $HOME/android-sdk/cmdline-tools
 
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip tools.zip
+          unzip -q tools.zip
 
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
@@ -67,7 +67,7 @@ jobs:
           # Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # Stabile Build-Tools + Plattformen installieren
+          # Stabile Plattform + Build-Tools installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
@@ -87,3 +87,10 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
+
+      # 9️⃣ APK als Artifact speichern
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: archaeologie-apk
+          path: bin/archaeologie-1.0-debug.apk
