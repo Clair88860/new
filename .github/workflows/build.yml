@@ -9,16 +9,13 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1️⃣ Checkout Repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Python Setup
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
-      # 3️⃣ Install system dependencies
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -35,13 +32,16 @@ jobs:
             zlib1g-dev \
             wget
 
-      # 4️⃣ Install Buildozer
+      - name: Check Java version
+        run: |
+          java -version
+          javac -version
+
       - name: Install Buildozer
         run: |
           pip install --upgrade pip
           pip install buildozer cython
 
-      # 5️⃣ Install Android SDK manuell (neue ZIP-Struktur)
       - name: Install Android SDK manually
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
@@ -50,26 +50,25 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip tools.zip
 
-          # Neuer Pfad für sdkmanager
+          # Set ANDROID_HOME and PATH
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # Alle Lizenzen automatisch akzeptieren
-          yes | sdkmanager --licenses
+          # Check Java used by sdkmanager
+          java -version
 
-          # Stabile Plattformen und Build-Tools installieren
+          # Accept licenses and install stable SDK
+          yes | sdkmanager --licenses
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
             "build-tools;34.0.0"
 
-      # 6️⃣ Clean previous builds
       - name: Clean previous builds
         run: |
           rm -rf .buildozer
           rm -rf bin
 
-      # 7️⃣ Build APK
       - name: Build APK
         run: |
           export ANDROID_HOME=$HOME/android-sdk
