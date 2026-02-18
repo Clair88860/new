@@ -6,7 +6,7 @@ package.domain = org.example
 
 source.dir = .
 source.include_exts = py,java
-android.add_src = java
+android.add_src = java/org/example
 
 version = 1.0
 entrypoint = main.py
@@ -20,9 +20,9 @@ fullscreen = 0
 
 android.api = 33
 android.minapi = 21
-android.sdk = 33
 android.ndk = 25
 android.archs = arm64-v8a
+android.enable_androidx = 1
 
 android.logcat_filters = *:S python:D
 warn_on_root = 1
