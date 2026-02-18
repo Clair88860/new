@@ -49,7 +49,7 @@ jobs:
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython
 
-      # 6️⃣ Android SDK + Build-Tools installieren
+      # 6️⃣ Android SDK + Build-Tools installieren und cmdline-tools fixen
       - name: Install Android SDK manually
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -61,17 +61,18 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip -q tools.zip
 
-          export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
+          # Buildozer erwartet cmdline-tools/latest
+          mkdir -p $HOME/android-sdk/cmdline-tools/latest
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest/
 
-          # Lizenzen automatisch akzeptieren
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+
+          # Lizenzen akzeptieren
           yes | sdkmanager --licenses
 
           # Stabile Plattform + Build-Tools installieren
-          sdkmanager \
-            "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;34.0.0"
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       # 7️⃣ Alte Builds bereinigen
       - name: Clean previous builds
@@ -85,7 +86,7 @@ jobs:
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
           export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
 
       # 9️⃣ APK als Artifact speichern (v4!)
