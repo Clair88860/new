@@ -64,10 +64,10 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # 🔹 Lizenzen automatisch akzeptieren
+          # Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # 🔹 Plattformen + stabile Build-Tools installieren
+          # Stabile Build-Tools + Plattformen installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
