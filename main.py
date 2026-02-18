@@ -1,40 +1,44 @@
-from kivy.app import App
-from kivy.uix.label import Label
-from kivy.clock import Clock
-from kivy.utils import platform
+import asyncio
+from bleak import BleakClient, BleakScanner
+import struct
 
-if platform == "android":
-    from jnius import autoclass
-    from android.permissions import request_permissions, Permission
+SERVICE_UUID = "180A"
+CHARACTERISTIC_UUID = "2A57"
 
-    PythonActivity = autoclass("org.kivy.android.PythonActivity")
-    BluetoothAdapter = autoclass("android.bluetooth.BluetoothAdapter")
-    BLEBridge = autoclass("org.example.BLEBridge")
-    BLEScanCallback = autoclass("org.example.BLEScanCallback")
+async def read_arduino_ble():
+    print("Scanne nach BLE-Geräten...")
+    devices = await BleakScanner.discover()
+    
+    arduino_device = None
+    for d in devices:
+        if "Arduino_GCS" in d.name:
+            arduino_device = d
+            break
 
-class BLEApp(App):
-    def build(self):
-        self.label = Label(text="Scan läuft..")
-        if platform == "android":
-            # Runtime Permissions für Android 12+
-            request_permissions([
-                Permission.BLUETOOTH_SCAN,
-                Permission.BLUETOOTH_CONNECT,
-                Permission.ACCESS_FINE_LOCATION
-            ])
-            self.adapter = BluetoothAdapter.getDefaultAdapter()
-            self.bridge = BLEBridge()
-            self.scan_cb = BLEScanCallback(self)
-            self.bridge.startScan(self.adapter, self.scan_cb)
-        return self.label
+    if not arduino_device:
+        print("Arduino nicht gefunden!")
+        return
 
-    def onDeviceFound(self, name):
-        # UI Update im Hauptthread
-        Clock.schedule_once(lambda dt: self.label.setter('text')(self.label, f"Gefunden: {name}"))
+    print(f"Verbinde zu {arduino_device.name} ({arduino_device.address}) ...")
 
-    def on_stop(self):
-        if platform == "android":
-            self.bridge.stopScan()
+    async with BleakClient(arduino_device.address) as client:
+        if not client.is_connected:
+            print("Verbindung fehlgeschlagen")
+            return
+        print("Verbunden!")
 
-if __name__ == "__main__":
-    BLEApp().run()
+        def handle_notification(sender, data):
+            winkel = struct.unpack('<f', data)[0]
+            print(f"Winkel: {winkel:.1f}°")
+
+        await client.start_notify(CHARACTERISTIC_UUID, handle_notification)
+
+        print("Daten werden empfangen. Strg+C zum Beenden.")
+        try:
+            while True:
+                await asyncio.sleep(1)
+        except KeyboardInterrupt:
+            print("Beende Verbindung...")
+            await client.stop_notify(CHARACTERISTIC_UUID)
+
+asyncio.run(read_arduino_ble())
