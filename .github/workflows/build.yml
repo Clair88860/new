@@ -32,8 +32,13 @@ jobs:
             zlib1g-dev \
             wget
 
-      - name: Check Java version
+      # 🔑 Set Java 17 as default
+      - name: Set Java 17 as default
         run: |
+          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
+          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac 1
+          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+          sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
           java -version
           javac -version
 
@@ -50,15 +55,14 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip tools.zip
 
-          # Set ANDROID_HOME and PATH
+          # Neuer Pfad für sdkmanager
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # Check Java used by sdkmanager
-          java -version
-
-          # Accept licenses and install stable SDK
+          # Lizenzen akzeptieren
           yes | sdkmanager --licenses
+
+          # Plattformen und Build-Tools installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
