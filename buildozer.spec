@@ -1,7 +1,7 @@
 [app]
 
 # Name der App
-title = Archäologie
+title = ArchäologieDocumentation
 package.name = archaeologie
 package.domain = org.example
 
@@ -16,7 +16,7 @@ orientation = portrait
 requirements = python3,kivy,pyjnius,android,pillow,bleak,asyncio
 
 # Berechtigungen
-android.permissions = KAMERA,BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION
+android.permissions = CAMERA,BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION
 
 # Anzeige
 fullscreen = 0
