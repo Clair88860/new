@@ -1,4 +1,3 @@
-
 import os
 import datetime
 from kivy.app import App
@@ -206,12 +205,6 @@ class Dashboard(FloatLayout):
                 spacing=5
             )
 
-            name = Label(
-                text=file.replace(".png", ""),
-                size_hint_y=None,
-                height=dp(25)
-            )
-
             img = Image(
                 source=os.path.join(self.photos_dir, file),
                 allow_stretch=True
@@ -220,8 +213,15 @@ class Dashboard(FloatLayout):
             img.bind(on_touch_down=lambda inst, touch, f=file:
                      self.open_image(f) if inst.collide_point(*touch.pos) else None)
 
-            box.add_widget(name)
+            name = Label(
+                text=file.replace(".png", ""),
+                size_hint_y=None,
+                height=dp(25)
+            )
+
+            # Titel jetzt UNTER dem Bild
             box.add_widget(img)
+            box.add_widget(name)
 
             grid.add_widget(box)
 
