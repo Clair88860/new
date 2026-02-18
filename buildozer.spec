@@ -18,11 +18,14 @@ android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT
 
 fullscreen = 0
 
+
 android.api = 33
 android.minapi = 21
 android.ndk = 25
 android.archs = arm64-v8a
 android.enable_androidx = 1
+android.build_tools_version = 37.0.0
+
 
 android.logcat_filters = *:S python:D
 warn_on_root = 1
