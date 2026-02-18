@@ -27,3 +27,4 @@ android.build_tools_version = 34.0.0
 
 android.logcat_filters = *:S python:D
 warn_on_root = 1
+p4a.branch = stable
