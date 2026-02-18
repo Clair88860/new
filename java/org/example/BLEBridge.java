@@ -14,9 +14,9 @@ public class BLEBridge {
     private BluetoothGatt gatt;
 
     public void startScan(BluetoothAdapter adapter, ScanCallback callback) {
-        if (adapter != null) {
+        if (adapter != null && callback != null) {
             scanner = adapter.getBluetoothLeScanner();
-            if (scanner != null && callback != null) {
+            if (scanner != null) {
                 scanCallback = callback;
                 scanner.startScan(scanCallback);
             }
