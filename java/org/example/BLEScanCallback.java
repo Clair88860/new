@@ -19,6 +19,7 @@ public class BLEScanCallback extends ScanCallback {
     public void onScanResult(int callbackType, ScanResult result) {
         BluetoothDevice device = result.getDevice();
         String name = device.getName();
+        if(name == null) name = "Unbekannt";
         Log.d(TAG, "Gefunden: " + name);
         if (pyCallback != null) {
             try {
