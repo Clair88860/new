@@ -1,5 +1,4 @@
 [app]
-
 title = ArchäologieDocumentation
 package.name = archaeologie
 package.domain = org.example
@@ -23,8 +22,9 @@ android.minapi = 21
 android.ndk = 25
 android.archs = arm64-v8a
 android.enable_androidx = 1
+
+# 🔹 Stabile Build-Tools, keine RC-Versionen
 android.build_tools_version = 34.0.0
 
 android.logcat_filters = *:S python:D
 warn_on_root = 1
-p4a.branch = stable
