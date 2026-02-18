@@ -43,19 +43,16 @@ jobs:
           cd $HOME/android-sdk
 
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
-          unzip tools.zip
+          unzip tools.zip -d cmdline-tools
 
-          # Prüfen ob latest schon existiert, sonst verschieben
-          if [ ! -d "cmdline-tools/latest" ]; then
-            mkdir -p cmdline-tools/latest
-            mv cmdline-tools/* cmdline-tools/latest/
-          fi
-
+          # Setze ANDROID_HOME und PATH korrekt
           export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
+          # Alle Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
+          # Installiere stabile Plattformen und Build-Tools
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
@@ -69,5 +66,6 @@ jobs:
       - name: Build APK
         run: |
           export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
+
