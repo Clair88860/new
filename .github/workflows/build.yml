@@ -9,13 +9,16 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      # 1️⃣ Checkout Repo
       - uses: actions/checkout@v3
 
+      # 2️⃣ Python Setup
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
+      # 3️⃣ Install system dependencies + OpenJDK 17
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -32,7 +35,7 @@ jobs:
             zlib1g-dev \
             wget
 
-      # 🔑 Java 17 als Standard setzen
+      # 4️⃣ Set Java 17 as default
       - name: Use Java 17
         run: |
           sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
@@ -42,11 +45,13 @@ jobs:
           java -version
           javac -version
 
+      # 5️⃣ Install Buildozer
       - name: Install Buildozer
         run: |
           pip install --upgrade pip
           pip install buildozer cython
 
+      # 6️⃣ Install Android SDK manually (neue cmdline-tools Struktur)
       - name: Install Android SDK manually
         run: |
           mkdir -p $HOME/android-sdk/cmdline-tools
@@ -55,24 +60,25 @@ jobs:
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip tools.zip
 
-          # PATH zu sdkmanager
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
           # Lizenzen akzeptieren
           yes | sdkmanager --licenses
 
-          # Plattformen und Build-Tools installieren
+          # Stabile Build-Tools und Plattformen installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
             "build-tools;34.0.0"
 
+      # 7️⃣ Clean previous builds
       - name: Clean previous builds
         run: |
           rm -rf .buildozer
           rm -rf bin
 
+      # 8️⃣ Build APK
       - name: Build APK
         run: |
           export ANDROID_HOME=$HOME/android-sdk
