@@ -49,29 +49,31 @@ jobs:
           pip install --upgrade pip
           pip install buildozer==1.5.0 cython
 
-      # 6️⃣ Android SDK + Build-Tools installieren und cmdline-tools fixen
-      - name: Install Android SDK manually
+      # 6️⃣ Android SDK + Build-Tools direkt im Buildozer-Pfad installieren
+      - name: Install Android SDK in Buildozer path
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
 
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
+          ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROIDSDK/cmdline-tools
+          cd $ANDROIDSDK/cmdline-tools
 
+          # cmdline-tools herunterladen
           wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O tools.zip
           unzip -q tools.zip
 
           # Buildozer erwartet cmdline-tools/latest
-          mkdir -p $HOME/android-sdk/cmdline-tools/latest
-          mv $HOME/android-sdk/cmdline-tools/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest/
+          mkdir -p $ANDROIDSDK/cmdline-tools/latest
+          mv $ANDROIDSDK/cmdline-tools/cmdline-tools/* $ANDROIDSDK/cmdline-tools/latest/
 
-          export ANDROID_HOME=$HOME/android-sdk
-          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          export ANDROID_HOME=$ANDROIDSDK
+          export PATH=$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$PATH
 
           # Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # Nur stabile Plattform + Build-Tools installieren
+          # Stabile Plattform + Build-Tools
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       # 7️⃣ Alte Builds bereinigen
@@ -80,12 +82,12 @@ jobs:
           rm -rf .buildozer
           rm -rf bin
 
-      # 8️⃣ APK bauen
+      # 8️⃣ Build APK
       - name: Build APK
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
           export PATH=$JAVA_HOME/bin:$PATH
-          export ANDROID_HOME=$HOME/android-sdk
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
 
