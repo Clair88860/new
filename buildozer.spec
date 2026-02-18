@@ -23,7 +23,7 @@ android.ndk = 25
 android.archs = arm64-v8a
 android.enable_androidx = 1
 
-# 🔹 Stabile Build-Tools, keine RC-Versionen
+# ✅ Stabile Build-Tools erzwingen
 android.build_tools_version = 34.0.0
 
 android.logcat_filters = *:S python:D
