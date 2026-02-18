@@ -29,4 +29,3 @@ class BLEApp(App):
 
 if __name__ == "__main__":
     BLEApp().run()
-
