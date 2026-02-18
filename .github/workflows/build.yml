@@ -68,10 +68,10 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # Lizenzen akzeptieren
+          # Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # Stabile Plattform + Build-Tools installieren
+          # Nur stabile Plattform + Build-Tools
           sdkmanager "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       # 7️⃣ Alte Builds bereinigen
@@ -89,7 +89,7 @@ jobs:
           export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
 
-      # 9️⃣ APK als Artifact speichern (v4!)
+      # 9️⃣ APK als Artifact speichern
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
