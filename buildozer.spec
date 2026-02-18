@@ -14,7 +14,7 @@ android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT
 
 android.api = 33
 android.minapi = 21
-android.build_tools_version = 34.0.0
+android.build_tools_version = 34.0.0   # ⚠️ KEINE RC-Version
 android.enable_androidx = 1
 android.archs = arm64-v8a
 fullscreen = 0
