@@ -8,7 +8,6 @@ import android.util.Log;
 import org.jnius.NativeInvocation;
 
 public class BLEScanCallback extends ScanCallback {
-
     private final Object pyCallback;
     private final String TAG = "BLEScanCallback";
 
