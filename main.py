@@ -16,9 +16,12 @@ class BLEApp(App):
         if platform == "android":
             self.adapter = BluetoothAdapter.getDefaultAdapter()
             self.bridge = BLEBridge()
-            self.scan_cb = BLEScanCallback()
+            self.scan_cb = BLEScanCallback(self)
             self.bridge.startScan(self.adapter, self.scan_cb)
         return self.label
+
+    def onDeviceFound(self, name):
+        Clock.schedule_once(lambda dt: self.label.setter('text')(self.label, f"Gefunden: {name}"))
 
     def on_stop(self):
         if platform == "android":
@@ -26,3 +29,4 @@ class BLEApp(App):
 
 if __name__ == "__main__":
     BLEApp().run()
+
