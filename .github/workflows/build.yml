@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1️⃣ Checkout Repo
+      # 1️⃣ Repo auschecken
       - uses: actions/checkout@v3
 
       # 2️⃣ Python Setup
@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.9
 
-      # 3️⃣ Install system dependencies + OpenJDK 17
+      # 3️⃣ Systemabhängigkeiten + OpenJDK 17
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -35,25 +35,26 @@ jobs:
             zlib1g-dev \
             wget
 
-      # 4️⃣ Set Java 17 as default
+      # 4️⃣ Java 17 aktiv setzen (definitiv!)
       - name: Use Java 17
         run: |
-          sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 1
-          sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac 1
-          sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-          sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
           java -version
           javac -version
 
-      # 5️⃣ Install Buildozer
+      # 5️⃣ Buildozer installieren
       - name: Install Buildozer
         run: |
           pip install --upgrade pip
           pip install buildozer cython
 
-      # 6️⃣ Install Android SDK manually (neue cmdline-tools Struktur)
+      # 6️⃣ Android SDK manuell installieren
       - name: Install Android SDK manually
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
+
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
 
@@ -63,24 +64,26 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # Lizenzen akzeptieren
+          # Alle Lizenzen akzeptieren
           yes | sdkmanager --licenses
 
-          # Stabile Build-Tools und Plattformen installieren
+          # Plattformen und stabile Build-Tools installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
             "build-tools;34.0.0"
 
-      # 7️⃣ Clean previous builds
+      # 7️⃣ Alte Builds bereinigen
       - name: Clean previous builds
         run: |
           rm -rf .buildozer
           rm -rf bin
 
-      # 8️⃣ Build APK
+      # 8️⃣ APK bauen
       - name: Build APK
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
           buildozer android debug
