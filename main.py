@@ -12,7 +12,7 @@ if platform == "android":
 
 class BLEApp(App):
     def build(self):
-        self.label = Label(text="Scan läuft...")
+        self.label = Label(text="Scan läuft..")
         if platform == "android":
             self.adapter = BluetoothAdapter.getDefaultAdapter()
             self.bridge = BLEBridge()
