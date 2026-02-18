@@ -10,20 +10,22 @@ import android.content.Context;
 
 public class BLEBridge {
     private BluetoothLeScanner scanner;
+    private ScanCallback scanCallback;
     private BluetoothGatt gatt;
 
     public void startScan(BluetoothAdapter adapter, ScanCallback callback) {
         if (adapter != null) {
             scanner = adapter.getBluetoothLeScanner();
-            if (scanner != null) {
-                scanner.startScan(callback);
+            if (scanner != null && callback != null) {
+                scanCallback = callback;
+                scanner.startScan(scanCallback);
             }
         }
     }
 
     public void stopScan() {
-        if (scanner != null) {
-            scanner.stopScan(new ScanCallback(){}); // Dummy, nur um compiler happy zu machen
+        if (scanner != null && scanCallback != null) {
+            scanner.stopScan(scanCallback);
         }
     }
 
