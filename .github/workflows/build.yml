@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1️⃣ Repo auschecken
+      # 1️⃣ Checkout Repo
       - uses: actions/checkout@v3
 
       # 2️⃣ Python Setup
@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.9
 
-      # 3️⃣ Systemabhängigkeiten + OpenJDK 17
+      # 3️⃣ System Dependencies + OpenJDK 17
       - name: Install system dependencies
         run: |
           sudo apt-get update
@@ -35,7 +35,7 @@ jobs:
             zlib1g-dev \
             wget
 
-      # 4️⃣ Java 17 aktiv setzen (definitiv!)
+      # 4️⃣ Java 17 aktiv setzen
       - name: Use Java 17
         run: |
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -64,10 +64,10 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$ANDROID_HOME/cmdline-tools/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
-          # Alle Lizenzen akzeptieren
+          # 🔹 Lizenzen automatisch akzeptieren
           yes | sdkmanager --licenses
 
-          # Plattformen und stabile Build-Tools installieren
+          # 🔹 Plattformen + stabile Build-Tools installieren
           sdkmanager \
             "platform-tools" \
             "platforms;android-33" \
