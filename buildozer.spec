@@ -1,22 +1,17 @@
 [app]
-title = ArchäologieDocumentation
-package.name = archaeologie
+title = ArduinoBLE
+package.name = arduinoble
 package.domain = org.example
 source.dir = .
-source.include_exts = py,java
-android.add_src = java/org/example
-version = 1.0
-entrypoint = main.py
+version = 0.1
+entrypoint = arduino_ble.py
+requirements = python3,kivy,bleak
+android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,ACCESS_FINE_LOCATION
 orientation = portrait
-
-requirements = python3,kivy,pyjnius,android,pillow
-android.permissions = BLUETOOTH,BLUETOOTH_ADMIN,BLUETOOTH_SCAN,BLUETOOTH_CONNECT,ACCESS_FINE_LOCATION
-
 android.api = 33
 android.minapi = 21
-android.build_tools_version = 34.0.0   # ⚠️ KEINE RC-Version
-android.enable_androidx = 1
-android.archs = arm64-v8a
-fullscreen = 0
-android.logcat_filters = *:S python:D
-warn_on_root = 1
+android.sdk = 33
+android.ndk = 25b
+
+[buildozer]
+log_level = 2
